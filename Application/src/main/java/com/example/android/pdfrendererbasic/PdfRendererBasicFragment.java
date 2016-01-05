@@ -32,6 +32,8 @@ import android.widget.Toast;
 
 import java.io.IOException;
 
+import uk.co.senab.photoview.PhotoViewAttacher;
+
 /**
  * This fragment has a big {@ImageView} that shows PDF pages, and 2 {@link android.widget.Button}s to move between
  * pages. We use a {@link android.graphics.pdf.PdfRenderer} to render PDF pages as {@link android.graphics.Bitmap}s.
@@ -73,6 +75,8 @@ public class PdfRendererBasicFragment extends Fragment implements View.OnClickLi
      */
     private Button mButtonNext;
 
+    private PhotoViewAttacher mAttacher;
+
     public PdfRendererBasicFragment() {
     }
 
@@ -89,6 +93,9 @@ public class PdfRendererBasicFragment extends Fragment implements View.OnClickLi
         mImageView = (ImageView) view.findViewById(R.id.image);
         mButtonPrevious = (Button) view.findViewById(R.id.previous);
         mButtonNext = (Button) view.findViewById(R.id.next);
+
+        // To make the ImageView has zoom in/out capability.
+        mAttacher = new PhotoViewAttacher(mImageView);
         // Bind events.
         mButtonPrevious.setOnClickListener(this);
         mButtonNext.setOnClickListener(this);
@@ -179,6 +186,8 @@ public class PdfRendererBasicFragment extends Fragment implements View.OnClickLi
         mCurrentPage.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
         // We are ready to show the Bitmap to user.
         mImageView.setImageBitmap(bitmap);
+        // Update to attacher so that the new content could be zoomed in/out.
+        mAttacher.update();
         updateUi();
     }
 
